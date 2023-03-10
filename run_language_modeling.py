@@ -160,7 +160,7 @@ def main():
         training_args.local_rank,
         training_args.device,
         training_args.n_gpu,
-        bool(training_args.local_rank != -1),
+        training_args.local_rank != -1,
         training_args.fp16,
     )
     logger.info("Training/evaluation parameters %s", training_args)
@@ -195,7 +195,7 @@ def main():
     if model_args.model_name_or_path:
         model = AutoModelWithLMHead.from_pretrained(
             model_args.model_name_or_path,
-            from_tf=bool(".ckpt" in model_args.model_name_or_path),
+            from_tf=".ckpt" in model_args.model_name_or_path,
             config=config,
             cache_dir=model_args.cache_dir,
         )
@@ -269,7 +269,7 @@ def main():
                     logger.info("  %s = %s", key, str(result[key]))
                     writer.write("%s = %s\n" % (key, str(result[key])))
 
-        results.update(result)
+        results |= result
 
     return results
 
